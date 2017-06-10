@@ -1,0 +1,17 @@
+{
+    "intents": [
+        {
+            "intent": "GetCoin",
+            "slots": [
+                {
+                    "name": "Coin",
+                    "type": "LIST_OF_COINS"
+                },
+                {
+                    "name": "Interval",
+                    "type": "AMAZON.DURATION"
+                }
+            ]
+        }
+    ]
+}
