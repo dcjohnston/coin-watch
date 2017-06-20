@@ -1,1 +1,8 @@
 GetCoin what's going on with {Coin}
+GetCoin what's up with {Coin}
+GetCoin what's happening with {Coin}
+GetCoin what's the price of {Coin}
+GetCoin what's the current price of {Coin}
+GetCoin give me the price of {Coin}
+GetCoin give me the current price of {Coin}
+GetCoin give me an update on {Coin}

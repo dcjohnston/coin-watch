@@ -1,2 +1,4 @@
 input.sample
 .git
+sync.sh
+lambda/node_modules
