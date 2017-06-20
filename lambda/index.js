@@ -9,6 +9,10 @@ const request = require('request');
 const APP_ID = 'CoinWatcher';
 const coinMarketCap = 'https://api.coinmarketcap.com/v1/ticker/';
 
+const launchPrompt = "What coin would you like to check?"
+const helpMessage = "";
+const helpReprompt = "";
+
 const reportMessage = (currency, quoteCurrency, price, movement) => {
     return `${currency} is currently at ${price} ${quoteCurrency}.\
     It has moved ${movement} percent over the past 24 hours.`
@@ -45,25 +49,17 @@ const switchBlock = coins.reduce((switchBlock, currency) => {
 
 const handlers = {
     'LaunchRequest': function () {
-        this.emit('GetCoin');
+        this.emit(':tell', 'Hey, whats up?');
     },
     'GetCoin': function () {
         const coin = this.event.request.intent.slots.Coin.value;
         switchBlock[coin](this);
     },
     'AMAZON.HelpIntent': function () {
-        const speechOutput = this.t('HELP_MESSAGE');
-        const reprompt = this.t('HELP_MESSAGE');
-        this.emit(':ask', speechOutput, reprompt);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
+        this.emit(':ask', helpMessage, helpReprompt);
     },
     'Unhandled': function () {
-        this.emit(':tell', this.t('Sorry, I didn\'t get that.'))
+        this.emit(':tell', 'Sorry, I didn\'t get that.');
     }
 };
 
