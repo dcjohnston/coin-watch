@@ -3,15 +3,10 @@
 
 'use strict';
 
-const Alexa = require('alexa-sdk');
-const request = require('request');
-
-const APP_ID = 'CoinWatcher';
-const coinMarketCap = 'https://api.coinmarketcap.com/v1/ticker/';
-
-const launchPrompt = "What coin would you like to check?"
-const helpMessage = "How can I help you?";
-const helpReprompt = "Sorry, I didn't get that.";
+const Alexa = require('alexa-sdk'),
+    request = require('request'),
+    APP_ID = 'CoinWatcher',
+    coinMarketCap = 'https://api.coinmarketcap.com/v1/ticker/';
 
 const reportMessage = (currency, quoteCurrency, price, movement) => {
     return `${currency} is currently at ${price} ${quoteCurrency}.\
@@ -36,6 +31,10 @@ const coins = [
     ['mysterium', 'MYST', 'mist'],
     ['golem-network-tokens', 'golem', 'GNT']
 ];
+const audibleCoins = coins.reduce((list, coins) => {
+    list.push(coins[0]);
+    return list;
+}, []).join(', ');
 
 const switchBlock = coins.reduce((switchBlock, currency) => {
     const cb = (context) => {
@@ -47,6 +46,17 @@ const switchBlock = coins.reduce((switchBlock, currency) => {
     return switchBlock;
 }, {});
 
+const launchPrompt = "What coin would you like to check?";
+const helpPrompt = "This is Coin Watch, a crypto currency price tracker. \
+    You can ask for the current price of a supported coin. \
+    You will receive the current price and 24 hour trend of the asset. \
+    For example, you could say: 'What\'s the current price of bitcoin?', or, \
+    'Give me an update on mysterium.' What coin would you like to check?";
+const helpReprompt = `Sorry, I didn't get that. Supported coins are ${audibleCoins}. \
+    Each coin also has supported abbreviations like BTC for bitcoin, and ETH for \
+    ethereum. What coin would you like to check?`;
+const unhandledRepsonse = "Sorry, I didnt get that."
+
 const handlers = {
     'LaunchRequest': function () {
         this.emit(':ask', launchPrompt);
@@ -54,16 +64,18 @@ const handlers = {
     'GetCoin': function () {
         const coin = this.event.request.intent.slots.Coin.value;
         if (switchBlock[coin]) {
-            return switchBlock[coin](this);
+            switchBlock[coin](this);
+        } else if (coin === 'help') {
+            this.emit('AMAZON.HelpIntent');
+        } else {
+            this.emit('Unhandled');
         }
-        this.emit('Unhandled');
     },
     'AMAZON.HelpIntent': function () {
-        // TODO clean this up
-        this.emit(':tell', helpReprompt);
+        this.emit(':ask', helpPrompt, helpReprompt);
     },
     'Unhandled': function () {
-        this.emit(':tell', 'Sorry, I didn\'t get that.');
+        this.emit(':tell', unhandledRepsonse);
     }
 };
 
