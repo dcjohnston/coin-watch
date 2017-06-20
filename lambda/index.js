@@ -10,8 +10,8 @@ const APP_ID = 'CoinWatcher';
 const coinMarketCap = 'https://api.coinmarketcap.com/v1/ticker/';
 
 const launchPrompt = "What coin would you like to check?"
-const helpMessage = "";
-const helpReprompt = "";
+const helpMessage = "How can I help you?";
+const helpReprompt = "Sorry, I didn't get that.";
 
 const reportMessage = (currency, quoteCurrency, price, movement) => {
     return `${currency} is currently at ${price} ${quoteCurrency}.\
@@ -49,14 +49,18 @@ const switchBlock = coins.reduce((switchBlock, currency) => {
 
 const handlers = {
     'LaunchRequest': function () {
-        this.emit(':tell', 'Hey, whats up?');
+        this.emit(':ask', launchPrompt);
     },
     'GetCoin': function () {
         const coin = this.event.request.intent.slots.Coin.value;
-        switchBlock[coin](this);
+        if (switchBlock[coin]) {
+            return switchBlock[coin](this);
+        }
+        this.emit('Unhandled');
     },
     'AMAZON.HelpIntent': function () {
-        this.emit(':ask', helpMessage, helpReprompt);
+        // TODO clean this up
+        this.emit(':tell', helpReprompt);
     },
     'Unhandled': function () {
         this.emit(':tell', 'Sorry, I didn\'t get that.');
