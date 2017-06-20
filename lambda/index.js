@@ -14,13 +14,13 @@ const reportMessage = (currency, quoteCurrency, price, movement) => {
     It has moved ${movement} percent over the past 24 hours.`
 }
 
-const askCoinMarketCap = (currency) => {
+const askCoinMarketCap = (context, currency) => {
     return request(coinMarketCap + currency, (err, resp) => {
         const data = JSON.parse(resp.body)[0];
         const message = reportMessage(
             data.name, 'USD', data.price_usd, data.percent_change_24h
         );
-        this.emit(':tell', message);
+        context.emit(':tell', message);
     });
 }
 
@@ -33,14 +33,14 @@ const coins = [
     ['golem-network-tokens', 'golem', 'GNT']
 ];
 
-const switchBlock = coins.reduce((currency, map) => {
-    map[currency[0]] = (context) => {
-        askCoinMarketCap.call(context, currency[0]);
+const switchBlock = coins.reduce((switchBlock, currency) => {
+    switchBlock[currency[0]] = (context) => {
+        askCoinMarketCap(context, currency[0]);
     }
     currency.slice(1).forEach((c) => {
-        map[c] = map[currency[0]];
+        switchBlock[c] = switchBlock[currency[0]];
     });
-    return map;
+    return switchBlock;
 }, {});
 
 const handlers = {
