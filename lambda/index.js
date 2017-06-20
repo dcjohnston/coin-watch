@@ -34,11 +34,11 @@ const coins = [
 ];
 
 const switchBlock = coins.reduce((switchBlock, currency) => {
-    switchBlock[currency[0]] = (context) => {
+    const cb = (context) => {
         askCoinMarketCap(context, currency[0]);
     }
-    currency.slice(1).forEach((c) => {
-        switchBlock[c] = switchBlock[currency[0]];
+    currency.forEach((c) => {
+        switchBlock[c] = switchBlock[c.toLowerCase()] = cb;
     });
     return switchBlock;
 }, {});
@@ -67,7 +67,7 @@ const handlers = {
     }
 };
 
-exports.handler = function (event, context) {
+exports.handler = (event, context) => {
     const alexa = Alexa.handler(event, context);
     alexa.APP_ID = APP_ID;
     alexa.registerHandlers(handlers);
