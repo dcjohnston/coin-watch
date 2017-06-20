@@ -47,7 +47,7 @@ const switchBlock = coins.reduce((switchBlock, currency) => {
 }, {});
 
 const launchPrompt = "What coin would you like to check?";
-const helpPrompt = "This is Coin Watch, a crypto currency price tracker. \
+const helpPrompt = "Coin Watch is a crypto currency price tracker. \
     You can ask for the current price of a supported coin. \
     You will receive the current price and 24 hour trend of the asset. \
     For example, you could say: 'What\'s the current price of bitcoin?', or, \
