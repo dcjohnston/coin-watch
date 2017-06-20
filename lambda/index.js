@@ -31,8 +31,12 @@ const coins = [
     ['mysterium', 'MYST', 'mist'],
     ['golem-network-tokens', 'golem', 'GNT']
 ];
-const audibleCoins = coins.reduce((list, coins) => {
-    list.push(coins[0]);
+const audibleCoins = coins.reduce((list, coin, i) => {
+    if (i === coins.length - 1) {
+        list.push('and ' + coin[0]);
+    } else {
+        list.push(coin[0]);
+    }
     return list;
 }, []).join(', ');
 
@@ -55,7 +59,6 @@ const helpPrompt = "Coin Watch is a crypto currency price tracker. \
 const helpReprompt = `Sorry, I didn't get that. Supported coins are ${audibleCoins}. \
     Each coin also has supported abbreviations like BTC for bitcoin, and ETH for \
     ethereum. What coin would you like to check?`;
-const unhandledRepsonse = "Sorry, I didnt get that."
 
 const handlers = {
     'LaunchRequest': function () {
@@ -75,7 +78,7 @@ const handlers = {
         this.emit(':ask', helpPrompt, helpReprompt);
     },
     'Unhandled': function () {
-        this.emit(':tell', unhandledRepsonse);
+        this.emit(':ask', helpReprompt);
     }
 };
 
