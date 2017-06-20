@@ -6,3 +6,4 @@ GetCoin what's the current price of {Coin}
 GetCoin give me the price of {Coin}
 GetCoin give me the current price of {Coin}
 GetCoin give me an update on {Coin}
+GetCoin for the current price of {Coin}
