@@ -16,6 +16,9 @@ const reportMessage = (currency, quoteCurrency, price, dailyMovement, weeklyMove
 
 const askCoinMarketCap = (context, currency) => {
     return request(coinMarketCap + currency, (err, resp) => {
+        if (err) {
+            context.emit(':tell', errorMessage);
+        }
         const data = JSON.parse(resp.body)[0];
         const roundedPrice = Math.round(data.price_usd*100)/100;
         const message = reportMessage(
@@ -66,6 +69,9 @@ const helpReprompt = `Sorry, I didn't get that. Supported coins are ${audibleCoi
     Each coin also has supported abbreviations like BTC for bitcoin, and ETH for \
     ethereum. What coin would you like to check?`;
 const stopMessage = 'Goodbye.'
+const errorMessage = 'There was a problem with the backend request.'
+
+
 const handlers = {
     'LaunchRequest': function () {
         this.emit(':ask', launchPrompt);
