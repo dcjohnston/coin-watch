@@ -4,7 +4,7 @@ ETH
 bitcoin
 BTC
 augur
-rep
+REP
 siacoin
 sya
 SC
