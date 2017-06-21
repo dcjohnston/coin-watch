@@ -65,11 +65,11 @@ const helpPrompt = "Coin Watch is a crypto currency price tracker, using \
     You can ask for the current price of a supported coin. \
     For example, you could say: 'What\'s the current price of bitcoin?', or, \
     'Give me an update on ETH.' What coin would you like to check?";
-const helpReprompt = `Sorry, I didn't get that. Supported coins are ${audibleCoins}. \
+const helpReprompt = `I didn't get that. Supported coins are ${audibleCoins}. \
     Each coin also has supported abbreviations like BTC for bitcoin, and ETH for \
     ethereum. What coin would you like to check?`;
 const stopMessage = 'Goodbye.'
-const errorMessage = 'There was a problem with the backend request.'
+const errorMessage = 'There was a problem with the remote API request.'
 
 
 const handlers = {
