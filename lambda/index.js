@@ -91,7 +91,7 @@ const handlers = {
     },
     'AMAZON.CancelIntent': function () {
         let message;
-        if (Math.random() < .95) {
+        if (Math.random() < .995) {
             message = stopMessage;
         } else {
             message = 'To the moon!';
