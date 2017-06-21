@@ -5,12 +5,13 @@
 
 const Alexa = require('alexa-sdk'),
     request = require('request'),
-    APP_ID = 'CoinWatcher',
+    APP_ID = 'CoinWatch',
     coinMarketCap = 'https://api.coinmarketcap.com/v1/ticker/';
 
-const reportMessage = (currency, quoteCurrency, price, movement) => {
+const reportMessage = (currency, quoteCurrency, price, dailyMovement, weeklyMovement) => {
     return `${currency} is currently at ${price} ${quoteCurrency}.\
-    It has moved ${movement} percent over the past 24 hours.`
+    It has moved ${dailyMovement} percent over the past 24 hours, and ${weeklyMovement} \
+    over the past week.`
 }
 
 const askCoinMarketCap = (context, currency) => {
@@ -18,7 +19,11 @@ const askCoinMarketCap = (context, currency) => {
         const data = JSON.parse(resp.body)[0];
         const roundedPrice = Math.round(data.price_usd*100)/100;
         const message = reportMessage(
-            data.name, 'USD', roundedPrice, data.percent_change_24h
+            data.name,
+            'USD',
+            roundedPrice,
+            data.percent_change_24h,
+            data.percent_change_7d
         );
         context.emit(':tell', message);
     });
@@ -52,11 +57,11 @@ const switchBlock = coins.reduce((switchBlock, currency) => {
 }, {});
 
 const launchPrompt = "What coin would you like to check?";
-const helpPrompt = "Coin Watch is a crypto currency price tracker. \
+const helpPrompt = "Coin Watch is a crypto currency price tracker, using \
+    coinmarketcap.com as its datafeed. \
     You can ask for the current price of a supported coin. \
-    You will receive the current price and 24 hour trend of the asset. \
     For example, you could say: 'What\'s the current price of bitcoin?', or, \
-    'Give me an update on mysterium.' What coin would you like to check?";
+    'Give me an update on ETH.' What coin would you like to check?";
 const helpReprompt = `Sorry, I didn't get that. Supported coins are ${audibleCoins}. \
     Each coin also has supported abbreviations like BTC for bitcoin, and ETH for \
     ethereum. What coin would you like to check?`;
