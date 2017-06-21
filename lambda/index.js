@@ -17,7 +17,7 @@ const reportMessage = (currency, quoteCurrency, price, dailyMovement, weeklyMove
 const askCoinMarketCap = (context, currency) => {
     return request(coinMarketCap + currency, (err, resp) => {
         if (err) {
-            context.emit(':tell', errorMessage);
+            return context.emit(':tell', errorMessage);
         }
         const data = JSON.parse(resp.body)[0];
         const roundedPrice = Math.round(data.price_usd*100)/100;
@@ -28,7 +28,7 @@ const askCoinMarketCap = (context, currency) => {
             data.percent_change_24h,
             data.percent_change_7d
         );
-        context.emit(':tell', message);
+        return context.emit(':tell', message);
     });
 }
 
