@@ -84,8 +84,12 @@ const handlers = {
         this.emit(':ask', helpPrompt, helpReprompt);
     },
     'AMAZON.CancelIntent': function () {
-        const seed = Math.round(Math.random());
-        const message = [stopMessage, 'To the moon!'][seed];
+        let message;
+        if (Math.random() < .95) {
+            message = stopMessage;
+        } else {
+            message = 'To the moon!';
+        }
         this.emit(':tell', message);
     },
     'AMAZON.StopIntent': function () {
