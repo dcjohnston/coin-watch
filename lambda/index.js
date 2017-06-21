@@ -11,7 +11,7 @@ const Alexa = require('alexa-sdk'),
 const reportMessage = (currency, quoteCurrency, price, dailyMovement, weeklyMovement) => {
     return `${currency} is currently at ${price} ${quoteCurrency}.\
     It has moved ${dailyMovement} percent over the past 24 hours, and ${weeklyMovement} \
-    over the past week.`
+    percent over the past week.`
 }
 
 const askCoinMarketCap = (context, currency) => {
@@ -65,7 +65,7 @@ const helpPrompt = "Coin Watch is a crypto currency price tracker, using \
 const helpReprompt = `Sorry, I didn't get that. Supported coins are ${audibleCoins}. \
     Each coin also has supported abbreviations like BTC for bitcoin, and ETH for \
     ethereum. What coin would you like to check?`;
-
+const stopMessage = 'Goodbye.'
 const handlers = {
     'LaunchRequest': function () {
         this.emit(':ask', launchPrompt);
@@ -82,6 +82,14 @@ const handlers = {
     },
     'AMAZON.HelpIntent': function () {
         this.emit(':ask', helpPrompt, helpReprompt);
+    },
+    'AMAZON.CancelIntent': function () {
+        const seed = Math.round(Math.random());
+        const message = [stopMessage, 'To the moon!'][seed];
+        this.emit(':tell', message);
+    },
+    'AMAZON.StopIntent': function () {
+        this.emit(':tell', stopMessage);
     },
     'Unhandled': function () {
         this.emit(':ask', helpReprompt);
